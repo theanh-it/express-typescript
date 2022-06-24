@@ -2,8 +2,6 @@
 class Controller {
     constructor(model) {
         this.model = model;
-        for (var key in this)
-            console.log(key);
         this.index = this.index.bind(this);
         this.show = this.show.bind(this);
     }

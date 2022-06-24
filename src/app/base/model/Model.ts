@@ -22,6 +22,20 @@
             });
         });
     }
+
+    public transaction(){
+        globalThis.DB.beginTransaction();
+        
+        return this;
+    }
+
+    public commit(){
+        globalThis.DB.commit();
+    }
+
+    public rollback(){
+        globalThis.DB.rollback();
+    }
 }
 
 export default Model;

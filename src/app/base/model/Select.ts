@@ -11,6 +11,7 @@ export default class Select extends Model{
     public _orderBy: any = [];
     public _limit: { begin: number, size: number } = { begin: 0, size: 0 };
     public _where: any = [];
+    public _search: any = false;
 
     constructor(table: string){
         super(table);
@@ -42,6 +43,12 @@ export default class Select extends Model{
 
     public leftJoin(params: { table: string, on: string }) {
         this._leftJoin.push(params);
+
+        return this;
+    }
+
+    public searchFullText(params:{column: string, value: string}){
+        this._search = params;
 
         return this;
     }
@@ -122,7 +129,14 @@ export default class Select extends Model{
 
         var params: any = [];
 
-        var where = this._where.reduce((res: any, obj: any) => {
+        var where: string = "";
+
+        if(this._search) {
+            where = `WHERE MATCH(${this._search.column}) AGAINST(? IN BOOLEAN MODE)`;
+            params.push(this._search.value ? this._search.value + "*" : "");
+        }
+
+        where = this._where.reduce((res: any, obj: any) => {
             if (res && obj) {
                 if (obj.where) res += " AND ";
                 else res += " OR ";
@@ -134,7 +148,7 @@ export default class Select extends Model{
                 params.push(obj.value);
             }
             return res;
-        }, "");
+        }, where);
 
         var orderBy = this._orderBy.reduce((res: any, val: any) => {
             if (res && val) res += `,${val}`;

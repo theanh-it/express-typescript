@@ -61,7 +61,7 @@ export default class Insert extends Select {
 
             sql = `INSERT INTO ${set} VALUES ${values}`;
         } else if (typeof params == "object") {
-            sql = `INSERT INTO ${this.table} SET ?`;
+            sql = `INSERT INTO ${this._table} SET ?`;
             paramsQuery.push(params);
         }
         
