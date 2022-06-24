@@ -1,0 +1,13 @@
+{
+    "server": {
+        "port": 3000
+    },
+    "db": {
+        "mysql": {
+            "host": "localhost",
+            "user": "root",
+            "password": "Theanh234@_",
+            "database": "olonton"
+        }
+    }
+}
