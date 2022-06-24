@@ -6,10 +6,10 @@ export default class UserModel extends Model{
     }
 
     async getAll(){
-        return await this.query(`SELECT * FROM ${this.table}`);
+        return await this.query(`SELECT * FROM ${this._table}`);
     }
 
     async getSingle(id: number){
-        return await this.queryWithParams(`SELECT * FROM ${this.table} WHERE id=?`, [id])
+        return await this.queryWithParams(`SELECT * FROM ${this._table} WHERE id=?`, [id])
     }
 }

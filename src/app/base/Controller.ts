@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 
-class Controller{
+export default class Controller{
     protected model: any;
 
     constructor(model: any){
@@ -39,5 +39,3 @@ class Controller{
         });
     }
 }
-
-export = Controller;

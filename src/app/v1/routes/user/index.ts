@@ -1,6 +1,6 @@
-var route               = require("express").Router();
-var {UserController}    = require("../../controllers/UserController");
-var controller          = new UserController();
+import UserController from "../../controllers/UserController";
+var route       = require("express").Router();
+var controller  = new UserController();
 
 route.get("", controller.index);
 route.get("/:id", controller.show);

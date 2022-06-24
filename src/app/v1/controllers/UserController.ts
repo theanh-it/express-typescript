@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Controller from "../../base/Controller";
 import UserModel from "../models/UserModel";
 
-export class UserController extends Controller {
+export default class UserController extends Controller {
     constructor() {
         var model: any = new UserModel();
         super(model);
