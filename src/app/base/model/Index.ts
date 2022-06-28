@@ -18,4 +18,15 @@ export default class Index extends Delete{
         if(data.params.length) return this.queryWithParams(data.sql, data.params);
         else return this.query(data.sql);
     }
+
+    public getAll(){
+        return this.select(["*"])
+        .run();
+    }
+
+    public getSingle(id: number){
+        return this.select(["*"])
+        .where("id", id)
+        .run();
+    }
 }

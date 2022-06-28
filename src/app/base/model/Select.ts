@@ -1,6 +1,6 @@
 import Model from "./Model";
 
-export default class Select extends Model{
+export default class Select extends Model {
     public _action: string = ""; // insert || update || select || delete
     public _select: any = "";
     public _join: any = [];
@@ -11,13 +11,16 @@ export default class Select extends Model{
     public _orderBy: any = [];
     public _limit: { begin: number, size: number } = { begin: 0, size: 0 };
     public _where: any = [];
+    public _whereRaw: any = [];
+    public _whereIn: any = [];
+    public _whereNotIn: any = [];
     public _search: any = false;
 
-    constructor(table: string){
+    constructor(table: string) {
         super(table);
     }
 
-    public table(table: string){
+    public table(table: string) {
         this._table = table;
 
         return this;
@@ -47,7 +50,7 @@ export default class Select extends Model{
         return this;
     }
 
-    public searchFullText(params:{column: string, value: string}){
+    public searchFullText(params: { column: string, value: string }) {
         this._search = params;
 
         return this;
@@ -61,6 +64,66 @@ export default class Select extends Model{
 
     public orWhere(params: { column: string, compare: string, value: string }) {
         this._where.push({ ...params, where: false });
+
+        return this;
+    }
+
+    public whereRaw(where: string, params: any[] = []) {
+        this._whereRaw = {
+            where: where,
+            params: params,
+            isAnd: true
+        };
+
+        return this;
+    }
+
+    public orWhereRaw(where: string, params: any[] = []) {
+        this._whereRaw = {
+            where: where,
+            params: params,
+            isAnd: false
+        };
+
+        return this;
+    }
+
+    public whereIn(column: string, params: any[] = []) {
+        this._whereIn = {
+            column: column,
+            params: params,
+            isAnd: true
+        };
+
+        return this;
+    }
+
+    public orWhereIn(column: string, params: any[] = []) {
+        this._whereIn = {
+            column: column,
+            params: params,
+            isAnd: false
+        };
+
+        return this;
+    }
+
+    public whereNotIn(column: string, params: any[] = []) {
+        this._whereNotIn = {
+            column: column,
+            params: params,
+            isAnd: true
+        };
+
+        return this;
+    }
+
+    public orWhereNotIn(column: string, params: any[] = []) {
+        this._whereNotIn = {
+            column: column,
+            params: params,
+            isAnd: false
+        };
 
         return this;
     }
@@ -89,7 +152,7 @@ export default class Select extends Model{
         return this;
     }
 
-    public first(){
+    public first() {
         this._limit.begin = 1;
         this._limit.size = 0;
 
@@ -131,9 +194,57 @@ export default class Select extends Model{
 
         var where: string = "";
 
-        if(this._search) {
+        if (this._search) {
             where = `WHERE MATCH(${this._search.column}) AGAINST(? IN BOOLEAN MODE)`;
             params.push(this._search.value ? this._search.value + "*" : "");
+        }
+
+        if (this._whereRaw.length) {
+            where = this._whereRaw.reduce((res: any, obj: any) => {
+                if (res && obj) {
+                    if (obj.isAnd) res += " AND ";
+                    else res += " OR ";
+
+                    res += obj.where;
+                    params = params.concat(obj.params);
+                } else if (obj) {
+                    res = `WHERE ` + obj.where;
+                    params = obj.params;
+                }
+                return res;
+            }, where);
+        }
+
+        if (this._whereIn.length) {
+            where = this._whereIn.reduce((res: any, obj: any) => {
+                if (res && obj) {
+                    if (obj.isAnd) res += " AND ";
+                    else res += " OR ";
+
+                    res += obj.where;
+                    params = params.concat(obj.params);
+                } else if (obj) {
+                    res = `WHERE ` + obj.where;
+                    params = obj.params;
+                }
+                return res;
+            }, where);
+        }
+
+        if (this._whereNotIn.length) {
+            where = this._whereNotIn.reduce((res: any, obj: any) => {
+                if (res && obj) {
+                    if (obj.isAnd) res += " AND ";
+                    else res += " OR ";
+
+                    res += obj.where;
+                    params = params.concat(obj.params);
+                } else if (obj) {
+                    res = `WHERE ` + obj.where;
+                    params = obj.params;
+                }
+                return res;
+            }, where);
         }
 
         where = this._where.reduce((res: any, obj: any) => {
@@ -184,15 +295,15 @@ export default class Select extends Model{
 
             params.push(this._limit.begin);
             params.push(this._limit.size);
-        } else if(this._limit.begin) {
+        } else if (this._limit.begin) {
             limit = `LIMIT ?`;
 
             params.push(this._limit.begin);
         }
 
-        var sql = [select, join, leftJoin, rightJoin , where, groupBy, having, orderBy, limit].reduce((result,value)=>{
-            if(result && value) result += " "+value;
-            else if(value) result = value;
+        var sql = [select, join, leftJoin, rightJoin, where, groupBy, having, orderBy, limit].reduce((result, value) => {
+            if (result && value) result += " " + value;
+            else if (value) result = value;
 
             return result;
         }, "");
@@ -203,9 +314,9 @@ export default class Select extends Model{
         }
     }
 
-    public get(){
+    public get() {
         var data = this.toSqlSelect();
-        if(data.params.length) this.queryWithParams(data.sql, data.params);
+        if (data.params.length) this.queryWithParams(data.sql, data.params);
         else this.query(data.sql);
     }
 }
