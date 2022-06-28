@@ -26,8 +26,10 @@ export default class Select extends Model {
         return this;
     }
 
-    public select(colums: string[]): any {
-        this._select = colums.reduce((res: string, val: string): string => {
+    public select(colum: string): any {
+        var columns: string[] = Object.values(arguments);
+
+        this._select = columns.reduce((res: string, val: string): string => {
             if (res && val) return res + ', ' + val;
             else if (val) return val;
             return res;
@@ -56,14 +58,26 @@ export default class Select extends Model {
         return this;
     }
 
-    public where(params: { column: string, compare: string, value: string }) {
-        this._where.push({ ...params, where: true });
+    public where(column: string) {
+        var params = Object.values(arguments);
+
+        if(params.length > 2){
+            this._where.push({ column: params[0], compare: params[1], value: params[2], where: true });
+        }else if(params.length==2){
+            this._where.push({ column: params[0], compare: "=", value: params[1], where: true });
+        }
 
         return this;
     }
 
-    public orWhere(params: { column: string, compare: string, value: string }) {
-        this._where.push({ ...params, where: false });
+    public orWhere(column: string) {
+        var params = Object.values(arguments);
+
+        if(params.length > 2){
+            this._where.push({ column: params[0], compare: params[1], value: params[2], where: false });
+        }else if(params.length==2){
+            this._where.push({ column: params[0], compare: "=", value: params[1], where: false });
+        }
 
         return this;
     }
@@ -129,13 +143,17 @@ export default class Select extends Model {
     }
 
     public orderBy(params: string[]) {
-        this._orderBy = params;
+        params = Object.values(arguments);
+        
+        for(var val of params) this._orderBy.push(val);
 
         return this;
     }
 
     public groupBy(params: string[]) {
-        this._groupBy = params;
+        params = Object.values(arguments);
+        
+        for(var val of params) this._groupBy.push(val);
 
         return this;
     }

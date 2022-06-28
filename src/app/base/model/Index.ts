@@ -41,12 +41,12 @@ export default class Index extends Delete{
     }
 
     public getAll(){
-        return this.select(["*"])
+        return this.select("*")
         .run();
     }
 
     public getSingle(id: number){
-        return this.select(["*"])
+        return this.select("*")
         .where("id", id)
         .run();
     }

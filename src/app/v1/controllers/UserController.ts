@@ -10,21 +10,14 @@ export default class UserController extends Controller {
     }
 
     public index(request: Request, response: Response) {
-        var sql = this.model
-            .insert([{user: "name"}])
-            .searchFullText({column: "fullname", value: "th"})
-            .where({column: "id", compare: "<",value: 100})
-            .orWhere({column: "id", compare: ">",value: 100})
-            .whereRaw("id=?", [1])
-            .orWhereRaw("id=?", [1])
-            .whereIn("id", [1])
-            .orWhereIn("id", [1])
-            .whereNotIn("id", [1])
-            .orWhereNotIn("id", [1])
-            .toSql();
-        return response.json({
-            sql: sql
-        });
+        return response.json(this.model
+        .select("id","username", "password")
+        .where("id", "<", 10)
+        .where("id", ">", 5)
+        .orderBy("id ASC", "username ASC")
+        .groupBy("id", "username")
+        .toSql()
+        )
 
     }
 
