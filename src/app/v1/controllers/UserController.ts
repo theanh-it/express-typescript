@@ -9,24 +9,25 @@ export default class UserController extends Controller {
         this.create = this.create.bind(this);
     }
 
-    // public index(request: Request, response: Response) {
-    //     this.model
-    //         .select(["*"])
-    //         .searchFullText({column: "fullname", value: "th"})
-    //         .where({column: "id", compare: "<",value: 100})
-    //         .run()
-    //         .then((results: any) => {
-    //             response.json(
-    //                 results
-    //             );
-    //         })
-    //         .catch((error: any) => {
-    //             response.json(
-    //                 error
-    //             );
-    //         })
+    public index(request: Request, response: Response) {
+        this.model
+            .select(["*"])
+            .searchFullText({column: "fullname", value: "th"})
+            .where({column: "id", compare: "<",value: 100})
+            .orWhereRaw("id = ?", [1])
+            .run()
+            .then((results: any) => {
+                response.json(
+                    results
+                );
+            })
+            .catch((error: any) => {
+                response.json(
+                    error
+                );
+            })
 
-    // }
+    }
 
     public create(request: Request, response: Response) {
 

@@ -42,10 +42,22 @@ export default class Delete extends Update{
                     if (obj.isAnd) res += " AND ";
                     else res += " OR ";
 
-                    res += obj.where;
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res += `${obj.column} IN (${_in})`;
                     params = params.concat(obj.params);
-                } else if (obj) {
-                    res = `WHERE ` + obj.where;
+                } else if (obj && obj.params.length) {
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res = `WHERE ${obj.column} IN (${_in})`;
                     params = obj.params;
                 }
                 return res;
@@ -58,10 +70,22 @@ export default class Delete extends Update{
                     if (obj.isAnd) res += " AND ";
                     else res += " OR ";
 
-                    res += obj.where;
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res += `${obj.column} NOT IN (${_in})`;
                     params = params.concat(obj.params);
-                } else if (obj) {
-                    res = `WHERE ` + obj.where;
+                } else if (obj && obj.params.length) {
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res = `WHERE ${obj.column} NOT IN (${_in})`;
                     params = obj.params;
                 }
                 return res;

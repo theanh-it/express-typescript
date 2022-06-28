@@ -50,10 +50,22 @@ export default class Update extends Insert {
                     if (obj.isAnd) res += " AND ";
                     else res += " OR ";
 
-                    res += obj.where;
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res += `${obj.column} IN (${_in})`;
                     paramsQuery = paramsQuery.concat(obj.params);
-                } else if (obj) {
-                    res = `WHERE ` + obj.where;
+                } else if (obj && obj.params.length) {
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res = `WHERE ${obj.column} IN (${_in})`;
                     paramsQuery = obj.params;
                 }
                 return res;
@@ -66,11 +78,23 @@ export default class Update extends Insert {
                     if (obj.isAnd) res += " AND ";
                     else res += " OR ";
 
-                    res += obj.where;
-                    params = params.concat(obj.params);
-                } else if (obj) {
-                    res = `WHERE ` + obj.where;
-                    params = obj.params;
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res += `${obj.column} NOT IN (${_in})`;
+                    paramsQuery = paramsQuery.concat(obj.params);
+                } else if (obj && obj.params.length) {
+                    var _in = obj.params.reduce((r: any,v: any)=>{
+                        if(r&&v) res += `,?`;
+                        else if(v) res = `?`;
+                        return res;
+                    }, "");
+
+                    res = `WHERE ${obj.column} NOT IN (${_in})`;
+                    paramsQuery = obj.params;
                 }
                 return res;
             }, where);
