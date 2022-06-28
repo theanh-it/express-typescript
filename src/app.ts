@@ -2,7 +2,7 @@ declare var DB: any;
 const config    = require("../config.json");
 const dotenv    = require("dotenv");
 const express   = require("express");
-const mysql     = require("mysql");
+const mysql     = require("mysql2");
 
 dotenv.config();
 

@@ -9,23 +9,11 @@ export default class UserController extends Controller {
         this.create = this.create.bind(this);
     }
 
-    public index(request: Request, response: Response) {
-        return response.json(this.model
-        .select("id","username", "password")
-        .where("id", "<", 10)
-        .where("id", ">", 5)
-        .orderBy("id ASC", "username ASC")
-        .groupBy("id", "username")
-        .toSql()
-        )
-
-    }
-
     public create(request: Request, response: Response) {
 
         this.model
             .transaction()
-            .select(["*"])
+            .select("*")
             .run()
             .then((results: any) => {
                 return this.model.update({ username: "admin", fullname: "theanh" }).where({ column: "username", value: "admin" }).run();
@@ -38,7 +26,7 @@ export default class UserController extends Controller {
 
                 response.json({
                     message: "success",
-                    result: this.model.select(["*"]).run()
+                    result: this.model.select("*").run()
                 });
             })
             .catch(async (error: any) => {

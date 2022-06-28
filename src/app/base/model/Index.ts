@@ -25,16 +25,19 @@ export default class Index extends Delete{
     }
 
     public toSql(){
-        if(this._action == "insert") return this.toSqlInsert();
-        else if(this._action == "update") return this.toSqlUpdate();
-        else if(this._action == "select") return this.toSqlSelect();
-        else if(this._action == "delete") return this.toSqlDelete();
+        var result: any;
+        if(this._action == "insert") result = this.toSqlInsert();
+        else if(this._action == "update") result = this.toSqlUpdate();
+        else if(this._action == "select") result = this.toSqlSelect();
+        else if(this._action == "delete") result = this.toSqlDelete();
+
+        this.clear();
+
+        return result;
     }
 
     public run(){
         var data: any = this.toSql();
-
-        this.clear();
 
         if(data.params.length) return this.queryWithParams(data.sql, data.params);
         else return this.query(data.sql);
