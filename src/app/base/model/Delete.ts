@@ -43,18 +43,18 @@ export default class Delete extends Update{
                     else res += " OR ";
 
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res += `${obj.column} IN (${_in})`;
                     params = params.concat(obj.params);
                 } else if (obj && obj.params.length) {
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res = `WHERE ${obj.column} IN (${_in})`;
@@ -71,18 +71,18 @@ export default class Delete extends Update{
                     else res += " OR ";
 
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res += `${obj.column} NOT IN (${_in})`;
                     params = params.concat(obj.params);
                 } else if (obj && obj.params.length) {
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res = `WHERE ${obj.column} NOT IN (${_in})`;

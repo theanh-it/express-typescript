@@ -1,7 +1,7 @@
 import Select from "./Select";
 
 export default class Insert extends Select {
-    public _insert: any;
+    public _insert: any = "";
 
     constructor(table: string){
         super(table);

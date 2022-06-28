@@ -69,61 +69,61 @@ export default class Select extends Model {
     }
 
     public whereRaw(where: string, params: any[] = []) {
-        this._whereRaw = {
+        this._whereRaw.push({
             where: where,
             params: params,
             isAnd: true
-        };
+        });
 
         return this;
     }
 
     public orWhereRaw(where: string, params: any[] = []) {
-        this._whereRaw = {
+        this._whereRaw.push({
             where: where,
             params: params,
             isAnd: false
-        };
+        });
 
         return this;
     }
 
     public whereIn(column: string, params: any[] = []) {
-        this._whereIn = {
+        this._whereIn.push({
             column: column,
             params: params,
             isAnd: true
-        };
+        });
 
         return this;
     }
 
     public orWhereIn(column: string, params: any[] = []) {
-        this._whereIn = {
+        this._whereIn.push({
             column: column,
             params: params,
             isAnd: false
-        };
+        });
 
         return this;
     }
 
     public whereNotIn(column: string, params: any[] = []) {
-        this._whereNotIn = {
+        this._whereNotIn.push({
             column: column,
             params: params,
             isAnd: true
-        };
+        });
 
         return this;
     }
 
     public orWhereNotIn(column: string, params: any[] = []) {
-        this._whereNotIn = {
+        this._whereNotIn.push({
             column: column,
             params: params,
             isAnd: false
-        };
+        });
 
         return this;
     }
@@ -222,18 +222,18 @@ export default class Select extends Model {
                     else res += " OR ";
 
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res += `${obj.column} IN (${_in})`;
                     params = params.concat(obj.params);
                 } else if (obj && obj.params.length) {
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res = `WHERE ${obj.column} IN (${_in})`;
@@ -250,18 +250,18 @@ export default class Select extends Model {
                     else res += " OR ";
 
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res += `${obj.column} NOT IN (${_in})`;
                     params = params.concat(obj.params);
                 } else if (obj && obj.params.length) {
                     var _in = obj.params.reduce((r: any,v: any)=>{
-                        if(r&&v) res += `,?`;
-                        else if(v) res = `?`;
-                        return res;
+                        if(r&&v) r += `,?`;
+                        else if(v) r = `?`;
+                        return r;
                     }, "");
 
                     res = `WHERE ${obj.column} NOT IN (${_in})`;
@@ -336,11 +336,5 @@ export default class Select extends Model {
             sql: sql,
             params: params
         }
-    }
-
-    public get() {
-        var data = this.toSqlSelect();
-        if (data.params.length) this.queryWithParams(data.sql, data.params);
-        else this.query(data.sql);
     }
 }
